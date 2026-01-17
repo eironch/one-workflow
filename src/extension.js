@@ -151,8 +151,9 @@ class LauncherSidebarProvider {
   }
 
   _createTerminal(name, cwd, cmd) {
-    const settings = this._context.globalState.get('settings', { defaultShell: 'cmd.exe' });
-    const terminal = vscode.window.createTerminal({ name, cwd, shellPath: settings.defaultShell });
+    const settings = this._context.globalState.get('settings', { defaultShell: 'default' });
+    const shellPath = settings.defaultShell === 'default' ? undefined : settings.defaultShell;
+    const terminal = vscode.window.createTerminal({ name, cwd, shellPath });
     terminal.show();
     terminal.sendText(cmd);
   }
@@ -164,7 +165,7 @@ class LauncherSidebarProvider {
     }
     if (enabled) {
       this._interval = setInterval(() => {
-        const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' });
+        const settings = this._context.globalState.get('settings', { automationKey: '{F13}', launchCommand: 'pnpm start', defaultShell: 'default' });
         // Surgical focus: Target VS Code, Cursor, Windsurf, or Antigravity
         const IDEs = ['Visual Studio Code', 'Cursor', 'Windsurf', 'Antigravity'];
         const command = `$wshell = New-Object -ComObject WScript.Shell; $targets = @(${IDEs.map(i => `'${i}'`).join(',')}); foreach ($t in $targets) { if ($wshell.AppActivate($t)) { $wshell.SendKeys('${settings.automationKey}'); break } }`;
@@ -249,6 +250,7 @@ class LauncherSidebarProvider {
         <div class="field">
           <label>Default Shell</label>
           <select id="defaultShell" style="width: 100%; padding: 6px; background: var(--vscode-input-background); color: var(--vscode-input-foreground); border: 1px solid var(--vscode-input-border); border-radius: 4px;">
+            <option value="default">VS Code Default</option>
             <option value="cmd.exe">CMD</option>
             <option value="powershell.exe">PowerShell</option>
           </select>
@@ -261,7 +263,7 @@ class LauncherSidebarProvider {
 
       <script>
         const vscode = acquireVsCodeApi();
-        let lastSaved = { automationKey: '{F9}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' };
+        let lastSaved = { automationKey: '{F13}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' };
         let mods = { ctrl: false, shift: false, alt: false };
 
         window.addEventListener('message', event => {
@@ -323,7 +325,7 @@ class LauncherSidebarProvider {
 
         function syncUI(settings) {
           if (!settings) settings = lastSaved;
-          let k = settings.automationKey || '{F9}';
+          let k = settings.automationKey || '{F13}';
           
           mods.ctrl = k.includes('^');
           mods.shift = k.includes('+');
@@ -337,7 +339,7 @@ class LauncherSidebarProvider {
           document.getElementById('autoKey').value = cleanKey;
           document.getElementById('currentKey').innerText = k;
           document.getElementById('launchCmd').value = settings.launchCommand;
-          document.getElementById('defaultShell').value = settings.defaultShell || 'cmd.exe';
+          document.getElementById('defaultShell').value = settings.defaultShell || 'default';
         }
 
         function handleKeyDown(e) {
@@ -350,7 +352,7 @@ class LauncherSidebarProvider {
         function saveSettings() {
           const key = document.getElementById('autoKey').value;
           let fullKey = '';
-          fullKey += (key || 'F9');
+          fullKey += (key || 'F13');
           if (fullKey.length > 1 || fullKey.startsWith('F')) {
              if(!fullKey.startsWith('{')) fullKey = '{' + fullKey + '}';
           }
@@ -363,7 +365,7 @@ class LauncherSidebarProvider {
           lastSaved = {
             automationKey: fullKey,
             launchCommand: document.getElementById('launchCmd').value || 'pnpm start',
-            defaultShell: document.getElementById('defaultShell').value || 'cmd.exe'
+            defaultShell: document.getElementById('defaultShell').value || 'default'
           };
           vscode.postMessage({ type: 'saveSettings', settings: lastSaved });
           toggleSettings();
