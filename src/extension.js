@@ -163,7 +163,7 @@ class LauncherSidebarProvider {
     }
     if (enabled) {
       this._interval = setInterval(() => {
-        const settings = this._context.globalState.get('settings', { automationKey: '{F8}', launchCommand: 'pnpm start' });
+        const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start' });
         execa('powershell', ['-Command', `(New-Object -ComObject WScript.Shell).SendKeys('${settings.automationKey}')`]).catch(() => {});
       }, 5000);
     }
@@ -250,7 +250,7 @@ class LauncherSidebarProvider {
 
       <script>
         const vscode = acquireVsCodeApi();
-        let lastSaved = { automationKey: '{F8}', launchCommand: 'pnpm start' };
+        let lastSaved = { automationKey: '{F9}', launchCommand: 'pnpm start' };
         let mods = { ctrl: false, shift: false, alt: false };
 
         window.addEventListener('message', event => {
@@ -312,7 +312,7 @@ class LauncherSidebarProvider {
 
         function syncUI(settings) {
           if (!settings) settings = lastSaved;
-          let k = settings.automationKey || '{F8}';
+          let k = settings.automationKey || '{F9}';
           
           mods.ctrl = k.includes('^');
           mods.shift = k.includes('+');
@@ -338,7 +338,7 @@ class LauncherSidebarProvider {
         function saveSettings() {
           const key = document.getElementById('autoKey').value;
           let fullKey = '';
-          fullKey += (key || 'F8');
+          fullKey += (key || 'F9');
           if (fullKey.length > 1 || fullKey.startsWith('F')) {
              if(!fullKey.startsWith('{')) fullKey = '{' + fullKey + '}';
           }
