@@ -3,7 +3,7 @@
   "publisher": "local-dev",
   "displayName": "One Workflow",
   "description": "Premium workflow manager for multiple projects.",
-  "version": "1.1.14",
+  "version": "1.1.20",
   "icon": "extension-icon.svg",
   "engines": {
     "vscode": "^1.60.0"
