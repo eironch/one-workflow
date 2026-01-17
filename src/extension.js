@@ -116,7 +116,7 @@ class LauncherSidebarProvider {
         })) });
       }
     }
-    const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' });
+    const settings = this._context.globalState.get('settings', { automationKey: '{PAUSE}', launchCommand: 'pnpm start', defaultShell: 'default' });
     const autoEnabled = !!this._interval;
     this._view.webview.postMessage({ type: 'projects', projects, settings, autoEnabled });
   }
@@ -165,7 +165,7 @@ class LauncherSidebarProvider {
     }
     if (enabled) {
       this._interval = setInterval(() => {
-        const settings = this._context.globalState.get('settings', { automationKey: '{F13}', launchCommand: 'pnpm start', defaultShell: 'default' });
+        const settings = this._context.globalState.get('settings', { automationKey: '{PAUSE}', launchCommand: 'pnpm start', defaultShell: 'default' });
         // Surgical focus: Target VS Code, Cursor, Windsurf, or Antigravity
         const IDEs = ['Visual Studio Code', 'Cursor', 'Windsurf', 'Antigravity'];
         const command = `$wshell = New-Object -ComObject WScript.Shell; $targets = @(${IDEs.map(i => `'${i}'`).join(',')}); foreach ($t in $targets) { if ($wshell.AppActivate($t)) { $wshell.SendKeys('${settings.automationKey}'); break } }`;
@@ -263,7 +263,7 @@ class LauncherSidebarProvider {
 
       <script>
         const vscode = acquireVsCodeApi();
-        let lastSaved = { automationKey: '{F13}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' };
+        let lastSaved = { automationKey: '{PAUSE}', launchCommand: 'pnpm start', defaultShell: 'default' };
         let mods = { ctrl: false, shift: false, alt: false };
 
         window.addEventListener('message', event => {
@@ -325,7 +325,7 @@ class LauncherSidebarProvider {
 
         function syncUI(settings) {
           if (!settings) settings = lastSaved;
-          let k = settings.automationKey || '{F13}';
+          let k = settings.automationKey || '{PAUSE}';
           
           mods.ctrl = k.includes('^');
           mods.shift = k.includes('+');
@@ -352,7 +352,7 @@ class LauncherSidebarProvider {
         function saveSettings() {
           const key = document.getElementById('autoKey').value;
           let fullKey = '';
-          fullKey += (key || 'F13');
+          fullKey += (key || 'PAUSE');
           if (fullKey.length > 1 || fullKey.startsWith('F')) {
              if(!fullKey.startsWith('{')) fullKey = '{' + fullKey + '}';
           }
