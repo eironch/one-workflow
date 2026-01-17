@@ -1,15 +1,25 @@
-# One Workflow
+# One-Workflow
 
-Premium workflow manager for multiple projects. Unified AI development workflow for VS Code.
+One-Workflow is a Visual Studio Code extension providing a unified interface for managing multiple projects and AI-driven development workflows.
 
 ## Features
-- **Sidebar Integration**: Manage multiple project roots and launch pnpm scripts directly.
-- **Automation**: Periodically send keys (default F8) to trigger external automation.
-- **Utilities**: Quickly kill ports (one-workflow.killPort) or pair ADB devices (one-workflow.adbPair).
-- **Log Harvesting**: "Copy Log" button to quickly grab project paths for AI diagnostics.
 
-## Version 1.1.14 Changes
-- Refined project scanning: Only projects with runnable scripts (`start`, `dev`, etc.) are detected.
-- Fixed default automation key format.
-- Restored Workspaces settings button.
-- Dynamic configuration titles in the settings overlay.
+- **Project Launcher**: Sidebar interface to quickly run and monitor sub-projects within a monorepo.
+- **Process Management**: Integrated tools to identify and terminate blocking ports.
+- **ADB Integration**: Simplified ADB pairing and device management for mobile development.
+- **Automation Engine**: Customizable key-binding automation for rapid iterative testing.
+
+## commands
+
+- `One Workflow: Kill Port`: Terminate a process on a specified port.
+- `One Workflow: ADB Pair`: Execute ADB pairing via terminal.
+
+## Setup
+
+1. Open the "One Workflow" sidebar in the VS Code Activity Bar.
+2. Configure project roots in the extension settings.
+3. Launch development scripts directly from the interface.
+
+## License
+
+MIT

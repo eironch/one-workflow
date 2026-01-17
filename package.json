@@ -4,7 +4,10 @@
   "displayName": "One Workflow",
   "description": "Premium workflow manager for multiple projects.",
   "version": "1.1.20",
-  "icon": "extension-icon.svg",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eironch/one-workflow.git"
+  },
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -20,8 +23,7 @@
       "activitybar": [
         {
           "id": "one-workflow-sidebar",
-          "title": "One Workflow",
-          "icon": "sidebar-icon.svg"
+          "title": "One Workflow"
         }
       ]
     },
