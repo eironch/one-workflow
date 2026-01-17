@@ -116,7 +116,7 @@ class LauncherSidebarProvider {
         })) });
       }
     }
-    const settings = this._context.globalState.get('settings', { automationKey: '{F8}', launchCommand: 'pnpm start' });
+    const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start' });
     const autoEnabled = !!this._interval;
     this._view.webview.postMessage({ type: 'projects', projects, settings, autoEnabled });
   }
