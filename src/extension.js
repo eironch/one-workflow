@@ -151,7 +151,8 @@ class LauncherSidebarProvider {
   }
 
   _createTerminal(name, cwd, cmd) {
-    const terminal = vscode.window.createTerminal({ name, cwd, shellPath: 'cmd.exe' });
+    const settings = this._context.globalState.get('settings', { defaultShell: 'cmd.exe' });
+    const terminal = vscode.window.createTerminal({ name, cwd, shellPath: settings.defaultShell });
     terminal.show();
     terminal.sendText(cmd);
   }
@@ -163,8 +164,10 @@ class LauncherSidebarProvider {
     }
     if (enabled) {
       this._interval = setInterval(() => {
-        const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start' });
-        execa('powershell', ['-Command', `(New-Object -ComObject WScript.Shell).SendKeys('${settings.automationKey}')`]).catch(() => {});
+        const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' });
+        // Surgical focus: Ensure keys are ONLY sent to Visual Studio Code
+        const command = `$wshell = New-Object -ComObject WScript.Shell; if ($wshell.AppActivate('Visual Studio Code')) { $wshell.SendKeys('${settings.automationKey}') }`;
+        execa('powershell', ['-Command', command]).catch(() => {});
       }, 5000);
     }
     this._updateWebview();
@@ -242,6 +245,13 @@ class LauncherSidebarProvider {
           <label>Launch Command</label>
           <input type="text" id="launchCmd" placeholder="pnpm start">
         </div>
+        <div class="field">
+          <label>Default Shell</label>
+          <select id="defaultShell" style="width: 100%; padding: 6px; background: var(--vscode-input-background); color: var(--vscode-input-foreground); border: 1px solid var(--vscode-input-border); border-radius: 4px;">
+            <option value="cmd.exe">CMD</option>
+            <option value="powershell.exe">PowerShell</option>
+          </select>
+        </div>
         <div class="btn-group" style="margin-top: 20px;">
           <button onclick="saveSettings()">Save</button>
           <button class="secondary" onclick="toggleSettings()">Cancel</button>
@@ -250,7 +260,7 @@ class LauncherSidebarProvider {
 
       <script>
         const vscode = acquireVsCodeApi();
-        let lastSaved = { automationKey: '{F9}', launchCommand: 'pnpm start' };
+        let lastSaved = { automationKey: '{F9}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' };
         let mods = { ctrl: false, shift: false, alt: false };
 
         window.addEventListener('message', event => {
@@ -326,6 +336,7 @@ class LauncherSidebarProvider {
           document.getElementById('autoKey').value = cleanKey;
           document.getElementById('currentKey').innerText = k;
           document.getElementById('launchCmd').value = settings.launchCommand;
+          document.getElementById('defaultShell').value = settings.defaultShell || 'cmd.exe';
         }
 
         function handleKeyDown(e) {
@@ -350,7 +361,8 @@ class LauncherSidebarProvider {
 
           lastSaved = {
             automationKey: fullKey,
-            launchCommand: document.getElementById('launchCmd').value || 'pnpm start'
+            launchCommand: document.getElementById('launchCmd').value || 'pnpm start',
+            defaultShell: document.getElementById('defaultShell').value || 'cmd.exe'
           };
           vscode.postMessage({ type: 'saveSettings', settings: lastSaved });
           toggleSettings();
