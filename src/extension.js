@@ -165,8 +165,8 @@ class LauncherSidebarProvider {
     if (enabled) {
       this._interval = setInterval(() => {
         const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' });
-        // Surgical focus: Target VS Code, Cursor, or Windsurf
-        const IDEs = ['Visual Studio Code', 'Cursor', 'Windsurf'];
+        // Surgical focus: Target VS Code, Cursor, Windsurf, or Antigravity
+        const IDEs = ['Visual Studio Code', 'Cursor', 'Windsurf', 'Antigravity'];
         const command = `$wshell = New-Object -ComObject WScript.Shell; $targets = @(${IDEs.map(i => `'${i}'`).join(',')}); foreach ($t in $targets) { if ($wshell.AppActivate($t)) { $wshell.SendKeys('${settings.automationKey}'); break } }`;
         execa('powershell', ['-Command', command]).catch(() => {});
       }, 5000);
