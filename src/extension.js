@@ -116,7 +116,7 @@ class LauncherSidebarProvider {
         })) });
       }
     }
-    const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start' });
+    const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' });
     const autoEnabled = !!this._interval;
     this._view.webview.postMessage({ type: 'projects', projects, settings, autoEnabled });
   }
@@ -165,8 +165,9 @@ class LauncherSidebarProvider {
     if (enabled) {
       this._interval = setInterval(() => {
         const settings = this._context.globalState.get('settings', { automationKey: '{F9}', launchCommand: 'pnpm start', defaultShell: 'cmd.exe' });
-        // Surgical focus: Ensure keys are ONLY sent to Visual Studio Code
-        const command = `$wshell = New-Object -ComObject WScript.Shell; if ($wshell.AppActivate('Visual Studio Code')) { $wshell.SendKeys('${settings.automationKey}') }`;
+        // Surgical focus: Target VS Code, Cursor, or Windsurf
+        const IDEs = ['Visual Studio Code', 'Cursor', 'Windsurf'];
+        const command = `$wshell = New-Object -ComObject WScript.Shell; $targets = @(${IDEs.map(i => `'${i}'`).join(',')}); foreach ($t in $targets) { if ($wshell.AppActivate($t)) { $wshell.SendKeys('${settings.automationKey}'); break } }`;
         execa('powershell', ['-Command', command]).catch(() => {});
       }, 5000);
     }
