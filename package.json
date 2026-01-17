@@ -3,11 +3,12 @@
   "publisher": "local-dev",
   "displayName": "One Workflow",
   "description": "Premium workflow manager for multiple projects.",
-  "version": "1.1.20",
+  "version": "1.1.21",
   "repository": {
     "type": "git",
     "url": "https://github.com/eironch/one-workflow.git"
   },
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.60.0"
   },

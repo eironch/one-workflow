@@ -268,11 +268,13 @@ class LauncherSidebarProvider {
 
         window.addEventListener('message', event => {
           const data = event.data;
-          if (data.type === 'projects') renderProjects(data.projects);
-          if (data.type === 'settings') {
-            lastSaved = data.settings;
+          if (data.type === 'projects') {
+            renderProjects(data.projects);
+            if (data.settings) {
+              lastSaved = data.settings;
+              syncUI(data.settings);
+            }
             updateStatus(data.autoEnabled);
-            syncUI(data.settings);
           }
         });
 
