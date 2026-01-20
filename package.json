@@ -3,7 +3,7 @@
   "publisher": "local-dev",
   "displayName": "One Workflow",
   "description": "Premium workflow manager for multiple projects.",
-  "version": "1.1.21",
+  "version": "1.1.22",
   "repository": {
     "type": "git",
     "url": "https://github.com/eironch/one-workflow.git"
@@ -24,7 +24,8 @@
       "activitybar": [
         {
           "id": "one-workflow-sidebar",
-          "title": "One Workflow"
+          "title": "One Workflow",
+          "icon": "icon.png"
         }
       ]
     },
